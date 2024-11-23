@@ -1,0 +1,9 @@
+const double planeStartX = 100;
+const double planeStartY = 100;
+const double planeWidth = 60;
+const double planeHeight = 40;
+const double gravity = 300;
+const double trustStrength = -300;
+const mount1Height = 100;
+const groundScrollSpeed = 100;
+const double planeInterval = 2;
