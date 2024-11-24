@@ -11,27 +11,27 @@ class PlaneManager extends Component with HasGameRef<skyfight> {
   void update(double dt) {
     planeSpawnTimer += dt;
 
-    if(planeSpawnTimer > planeInterval) {
+    if (planeSpawnTimer > getAdjustedInterval()) {
       planeSpawnTimer = 0;
       spawnPlane();
     }
   }
 
+  double getAdjustedInterval() {
+    return max(0.5, planeInterval - (gameRef.score * 0.01));
+  }
+
   void spawnPlane() {
-    // Set the spawn position at the right edge of the screen
-    final double xPosition = gameRef.size.x; // Start at the far right
-    final double yPosition = Random().nextDouble() * (gameRef.size.y - 150); // Random Y position within screen bounds
+    if (gameRef.children.whereType<OtherPlanes>().length >= 5) return;
 
-    // Set size of the planes
-    final Vector2 planeSize = Vector2(50, 50);
-
-    // Create the plane using the OtherPlanes class
-    final plane = OtherPlanes(
-      Vector2(xPosition, yPosition), // Position of the plane
-      planeSize, // Size of the plane
+    final double xPosition = gameRef.size.x;
+    final double yPosition = Random().nextDouble() * (gameRef.size.y - 150);
+    final Vector2 randomSize = Vector2(
+      Random().nextDouble() * 30 + 30,
+      Random().nextDouble() * 30 + 30,
     );
 
-    // Add the plane to the game
+    final plane = OtherPlanes(Vector2(xPosition, yPosition), randomSize);
     add(plane);
   }
 }

@@ -35,10 +35,23 @@ class MyPlane extends SpriteComponent with CollisionCallbacks,HasGameRef<skyfigh
   }
 
   @override
-  void update(double dt){
+  void update(double dt) {
     velocity += gravity * dt;
 
+    // Update position
     position.y += velocity * dt;
+
+    // Prevent the plane from leaving the top of the screen
+    if (position.y < 0) {
+      position.y = 0;
+      velocity = 0; // Reset velocity if it hits the top
+    }
+
+    // Prevent the plane from leaving the bottom of the screen
+    if (position.y + size.y > gameRef.size.y) {
+      position.y = gameRef.size.y - size.y; // Adjust position to stay within bounds
+      velocity = 0; // Reset velocity if it hits the bottom
+    }
   }
 
   @override

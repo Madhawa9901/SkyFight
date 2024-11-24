@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:game/components/Health.dart';
 import 'package:game/components/background.dart';
 import 'package:game/components/ground.dart';
+import 'package:game/components/myProjectiles.dart';
 import 'package:game/components/otherPlanes.dart';
+import 'package:game/components/otherProjectiles.dart';
 import 'package:game/components/plane.dart';
 import 'package:flame/game.dart';
 import 'package:game/components/planeManager.dart';
 import 'package:game/components/score.dart';
 import 'package:game/constant.dart';
 
-
-class skyfight extends FlameGame with TapDetector, HasCollisionDetection{
-
+class skyfight extends FlameGame with TapDetector, HasCollisionDetection {
   late MyPlane plane;
   late Background background;
   late Ground ground;
@@ -21,8 +21,12 @@ class skyfight extends FlameGame with TapDetector, HasCollisionDetection{
   late ScoreText scoreText;
   late HealthText healthText;
 
+  int score = 0;
+  int health = 10;
+  bool isGameOver = false;
+
   @override
-  FutureOr<void> onLoad(){
+  FutureOr<void> onLoad() {
     background = Background(size);
     add(background);
 
@@ -50,13 +54,8 @@ class skyfight extends FlameGame with TapDetector, HasCollisionDetection{
   @override
   void onTapDown(TapDownInfo info) {
     super.onTapDown(info);
-
-    // Fire a projectile
     plane.fire();
   }
-
-  int score = 0;
-  int health = 10;
 
   void incrementScore() {
     score += 1;
@@ -64,14 +63,15 @@ class skyfight extends FlameGame with TapDetector, HasCollisionDetection{
 
   void decrementHealth() {
     health -= 1;
+    if (health <= 0) {
+      gameOver();
+    }
   }
 
-  bool isGameOVer = false;
-
   void gameOver() {
-    if(isGameOVer) return;
+    if (isGameOver) return;
 
-    isGameOVer = true;
+    isGameOver = true;
     pauseEngine();
 
     if (buildContext != null) {
@@ -91,17 +91,26 @@ class skyfight extends FlameGame with TapDetector, HasCollisionDetection{
         ),
       );
     }
-
   }
 
   void resetGame() {
     plane.position = Vector2(planeStartX, planeStartY);
     plane.velocity = 0;
-    isGameOVer = false;
+    isGameOver = false;
     score = 0;
     health = 10;
-    children.whereType<OtherPlanes>().toList().forEach((otherPlane) => otherPlane.removeFromParent());
+    children
+        .whereType<PlaneManager>()
+        .toList()
+        .forEach((otherPlane) => otherPlane.removeFromParent());
+    children
+        .whereType<OtherProjectile>()
+        .toList()
+        .forEach((otherprojectiles) => otherprojectiles.removeFromParent());
+    children
+        .whereType<Projectile>()
+        .toList()
+        .forEach((projectiles) => projectiles.removeFromParent());
     resumeEngine();
   }
-
 }

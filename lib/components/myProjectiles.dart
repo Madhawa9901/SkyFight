@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:game/constant.dart';
 import 'package:game/game.dart';
 
 import 'otherPlanes.dart';
@@ -37,9 +36,9 @@ class Projectile extends SpriteComponent with CollisionCallbacks, HasGameRef<sky
 
     // Destroy other planes on collision
     if (other is OtherPlanes) {
-      other.removeFromParent();
       removeFromParent(); // Remove the projectile as well
-      gameRef.incrementScore();
+      other.removeFromParent();
+      other.explode();
     }
   }
 }
