@@ -8,7 +8,7 @@ import 'otherPlanes.dart';
 
 class OtherProjectile extends SpriteComponent with CollisionCallbacks, HasGameRef<skyfight> {
   final double speed;
-  final Vector2 direction; // New direction property
+  final Vector2 direction;
 
   OtherProjectile({
     required Vector2 position,
@@ -19,7 +19,7 @@ class OtherProjectile extends SpriteComponent with CollisionCallbacks, HasGameRe
 
   @override
   FutureOr<void> onLoad() async {
-    sprite = await Sprite.load('torpedo_flame.png'); // Add a sprite for the projectile
+    sprite = await Sprite.load('torpedo_flame.png');
     add(RectangleHitbox());
   }
 
@@ -27,10 +27,8 @@ class OtherProjectile extends SpriteComponent with CollisionCallbacks, HasGameRe
   void update(double dt) {
     super.update(dt);
 
-    // Move the projectile in the specified direction
     position += direction * speed * dt;
 
-    // Remove if it goes off-screen
     if (position.x > gameRef.size.x || position.x < 0 || position.y > gameRef.size.y || position.y < 0) {
       removeFromParent();
     }
@@ -40,9 +38,8 @@ class OtherProjectile extends SpriteComponent with CollisionCallbacks, HasGameRe
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
 
-    // Destroy other planes on collision
     if (other is Plane) {
-      removeFromParent();       // Remove the projectile
+      removeFromParent();
     }
   }
 }

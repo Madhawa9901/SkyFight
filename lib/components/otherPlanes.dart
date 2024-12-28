@@ -9,7 +9,7 @@ import 'package:game/game.dart';
 import 'otherProjectiles.dart';
 
 class OtherPlanes extends SpriteComponent with CollisionCallbacks, HasGameRef<skyfight> {
-  double fireCooldown = Random().nextDouble() * 2 + 1;
+  double fireCooldown = Random().nextDouble() * 2 + 1.5;
   double fireTimer = 0;
   int health = 3;
 
@@ -57,6 +57,7 @@ class OtherPlanes extends SpriteComponent with CollisionCallbacks, HasGameRef<sk
   void takeDamage(int damage) {
     health -= damage;
     if (health <= 0) {
+      removeFromParent();
       explode();
     }
   }

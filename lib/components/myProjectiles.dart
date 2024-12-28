@@ -39,6 +39,7 @@ class Projectile extends SpriteComponent with CollisionCallbacks, HasGameRef<sky
       removeFromParent(); // Remove the projectile as well
       other.removeFromParent();
       other.explode();
+      //other.takeDamage(1);
     }
   }
 }
